@@ -76,9 +76,25 @@ namespace SAUCE {
 		}
 		
 		public void Write( string filename ) {
+			SAUCE.Record record = new SAUCE.Record();
+			record.Read( filename );
+			
+			if( record.ID == "SAUCE" ) {
+				this.Remove( filename );
+			}
 		}
 		
 		public void Remove( string filename ) {
+			SAUCE.Record record = new SAUCE.Record();
+			record.Read( filename );
+			
+			if( record.ID != "SAUCE" ) {
+				return;
+			}
+
+			BinaryWriter writer = new BinaryWriter( new FileStream( filename, FileMode.Append ) );
+			writer.BaseStream.SetLength( record.Filesize );
+			writer.Close();
 		}
 	}
 }
