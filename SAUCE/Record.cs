@@ -92,7 +92,7 @@ namespace SAUCE {
                 return;
             }
 
-            BinaryWriter writer = new BinaryWriter( new FileStream( filename, FileMode.Append ) );
+            BinaryWriter writer = new BinaryWriter( new FileStream( filename, FileMode.Open ) );
             writer.BaseStream.SetLength( record.Filesize );
             writer.Close();
         }

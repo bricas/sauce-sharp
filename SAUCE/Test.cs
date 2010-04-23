@@ -39,6 +39,19 @@ namespace SAUCE {
             }, record.Comments );
         }
 
+        [Test (Description = "Test the Remove() method" )]
+        public void Remove(){
+            FileInfo info = new FileInfo( filename );
+            long filesize_before = info.Length;
+                
+            SAUCE.Record record = new SAUCE.Record();
+            record.Remove( filename );
+
+            info.Refresh();
+
+            Assert.AreEqual( filesize_before - 1 - 128 - 5 - (4 * 64), info.Length );
+        }
+            
         [SetUp()]
         public void Unpack()
         {
