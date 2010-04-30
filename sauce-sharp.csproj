@@ -8,6 +8,8 @@
     <ProjectGuid>{82EE9F9D-9AB8-4959-86A4-E0B86EEB43C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>sauce-sharp</AssemblyName>
+    <ReleaseVersion>0.01</ReleaseVersion>
+    <RootNamespace>saucesharp</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +53,7 @@
     <MonoDevelop>
       <Properties>
         <Policies>
-          <TextStylePolicy FileWidth="120" TabWidth="4" TabsToSpaces="True" NoTabsAfterNonTabs="False" RemoveTrailingWhitespace="True" EolMarker="Native" />
+          <TextStylePolicy FileWidth="120" RemoveTrailingWhitespace="True" inheritsSet="VisualStudio" inheritsScope="text/plain" />
         </Policies>
       </Properties>
     </MonoDevelop>

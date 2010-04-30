@@ -79,11 +79,36 @@ namespace SAUCE {
         
         public void Write( string filename ) {
             SAUCE.Record record = new SAUCE.Record();
-            record.Read( filename );
+            try {
+                record.Read( filename );
+            }
+            catch {
+            }
             
             if( record.ID == "SAUCE" ) {
                 this.Remove( filename );
             }
+
+            FileStream fs = new FileStream( filename, FileMode.Open );
+            BinaryWriter writer = new BinaryWriter( fs );
+            writer.Write( "\x26".ToCharArray() );
+			writer.Write( SAUCE_ID.ToCharArray() );
+			writer.Write( this.Version.ToCharArray() );
+			writer.Write( this.Title.PadRight( 35 ).ToCharArray() );
+			writer.Write( this.Author.PadRight( 20 ).ToCharArray() );
+			writer.Write( this.Group.PadRight( 20 ).ToCharArray() );
+			writer.Write( this.Date.ToCharArray() );
+			writer.Write( (UInt32) this.Filesize );
+			writer.Write( this.DatatypeID );
+			writer.Write( this.FiletypeID );
+			writer.Write( (UInt16) this.Tinfo1 );
+			writer.Write( (UInt16) this.Tinfo2 );
+			writer.Write( (UInt16) this.Tinfo3 );
+			writer.Write( (UInt16) this.Tinfo4 );
+			writer.Write( (Byte) 0 ); // TODO: Comment Count
+			writer.Write( this.Flags );
+			writer.Write( this.Filler.ToCharArray() );
+            writer.Close();
         }
         
         public void Remove( string filename ) {

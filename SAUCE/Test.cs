@@ -5,15 +5,16 @@ namespace SAUCE {
     using System.IO;
     using System.Reflection;
     using System.Text;
+    using System.Collections;
     
     [TestFixture]
     public class Test {
-        private string filename = Path.Combine( Path.GetTempPath(), "W7-R666.ANS" );
+        private Hashtable resources = new Hashtable();
         
         [Test (Description = "Test the Read() method" )]
         public void Read(){
             SAUCE.Record record = new SAUCE.Record();
-            record.Read( filename );
+            record.Read( (string) resources[ "W7-R666.ANS" ] );
             
             Assert.AreEqual( "SAUCE", record.ID );
             Assert.AreEqual( "00", record.Version );
@@ -39,9 +40,38 @@ namespace SAUCE {
             }, record.Comments );
         }
 
+        [Test (Description = "Test the Write() method" )]
+        public void Write(){
+            SAUCE.Record record = new SAUCE.Record();
+            record.Read( (string) resources[ "W7-R666.ANS" ] );
+            string filename = Path.GetTempFileName();
+            record.Write( filename );
+
+            SAUCE.Record got = new SAUCE.Record();
+            got.Read( filename );
+                
+            Assert.AreEqual( "SAUCE", got.ID );
+            Assert.AreEqual( "00", got.Version );
+            Assert.AreEqual( "Route 666", got.Title );
+            Assert.AreEqual( "White Trash", got.Author );
+            Assert.AreEqual( "ACiD Productions", got.Group );
+            Assert.AreEqual( "19970401", got.Date );
+            Assert.AreEqual( 42990, got.Filesize );
+            Assert.AreEqual( 1, got.DatatypeID );
+            Assert.AreEqual( 1, got.FiletypeID );
+            Assert.AreEqual( 80, got.Tinfo1 );
+            Assert.AreEqual( 180, got.Tinfo2 );
+            Assert.AreEqual( 0, got.Tinfo3 );
+            Assert.AreEqual( 0, got.Tinfo4 );
+            Assert.AreEqual( 0, got.CommentCount ); // TODO: comments
+            Assert.AreEqual( 0, got.Flags );
+            Assert.AreEqual( "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", got.Filler );
+        }
+
         [Test (Description = "Test the Remove() method" )]
         public void Remove(){
-            FileInfo info = new FileInfo( filename );
+            string filename = (string) resources[ "W7-R666.ANS" ];
+            FileInfo info = new FileInfo( filename  );
             long filesize_before = info.Length;
                 
             SAUCE.Record record = new SAUCE.Record();
@@ -56,7 +86,11 @@ namespace SAUCE {
         public void Unpack()
         {
             Assembly a = Assembly.GetExecutingAssembly();
-            Stream s = a.GetManifestResourceStream( "etc.W7-R666.ANS" );
+            Stream s = a.GetManifestResourceStream( "saucesharp.etc.W7-R666.ANS" );
+
+            string filename = Path.GetTempFileName();
+            resources.Add( "W7-R666.ANS", filename );
+                
             StreamReader sr = new StreamReader( s, Encoding.GetEncoding( "cp437" ) );
             StreamWriter sw = new StreamWriter( File.Create( filename ), Encoding.GetEncoding( "cp437" ) );
             sw.Write( sr.ReadToEnd() );
@@ -68,9 +102,13 @@ namespace SAUCE {
         [TearDown()]
         public void CleanUp()
         {
-            if( File.Exists( filename ) ) {
-                File.Delete( filename );
+            foreach( string filename in resources.Values ) {
+                if( File.Exists( filename ) ) {
+                    File.Delete( filename );
+                }
             }
+
+            resources.Clear();
         }
     }
 }
