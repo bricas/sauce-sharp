@@ -32,6 +32,7 @@ namespace SAUCE {
             BinaryReader reader = new BinaryReader( new FileStream( filename, FileMode.Open ) );
 
             if( reader.BaseStream.Length < 128 ) {
+                reader.Close();
                 throw new Exception( "Filesize too small to hold SAUCE record" );
             }
 
@@ -39,6 +40,7 @@ namespace SAUCE {
             this.ID = new string( reader.ReadChars( 5 ) );
 
             if( this.ID != "SAUCE" ) {
+                reader.Close();
                 throw new Exception( "File does not contain a SAUCE record" );
             }
             
