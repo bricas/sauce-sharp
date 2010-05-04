@@ -63,9 +63,17 @@ namespace SAUCE {
             Assert.AreEqual( 180, got.Tinfo2 );
             Assert.AreEqual( 0, got.Tinfo3 );
             Assert.AreEqual( 0, got.Tinfo4 );
-            Assert.AreEqual( 0, got.CommentCount ); // TODO: comments
+            Assert.AreEqual( 4, got.CommentCount );
             Assert.AreEqual( 0, got.Flags );
             Assert.AreEqual( "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", got.Filler );
+            Assert.AreEqual( new string[4] {
+                "To purchase your white trash ansi:  send cash/check to",
+                "keith nadolny / 41 loretto drive / cheektowaga, ny / 14225",
+                "make checks payable to keith nadolny/us funds only",
+                "5 dollars = 100 lines - 10 dollars = 200 lines"
+            }, got.Comments );
+            
+            File.Delete( filename );
         }
 
         [Test (Description = "Test the Remove() method" )]

@@ -5,7 +5,7 @@ namespace SAUCE {
     
     public class Record {
         private const string SAUCE_ID = "SAUCE";
-        private const string COMNT_ID = "SAUCE";
+        private const string COMNT_ID = "COMNT";
         
         public string ID { get; set; }
         public string Version { get; set; }
@@ -92,6 +92,14 @@ namespace SAUCE {
             FileStream fs = new FileStream( filename, FileMode.Open );
             BinaryWriter writer = new BinaryWriter( fs );
             writer.Write( "\x26".ToCharArray() );
+            
+            if( this.Comments.Length > 0 ) {
+                writer.Write( COMNT_ID.ToCharArray() );
+                foreach( string comment in this.Comments ) {
+                    writer.Write( comment.PadRight( 64 ).ToCharArray() );
+                }
+            }
+            
             writer.Write( SAUCE_ID.ToCharArray() );
             writer.Write( this.Version.ToCharArray() );
             writer.Write( this.Title.PadRight( 35 ).ToCharArray() );
@@ -105,7 +113,7 @@ namespace SAUCE {
             writer.Write( (UInt16) this.Tinfo2 );
             writer.Write( (UInt16) this.Tinfo3 );
             writer.Write( (UInt16) this.Tinfo4 );
-            writer.Write( (Byte) 0 ); // TODO: Comment Count
+            writer.Write( (Byte) this.Comments.Length );
             writer.Write( this.Flags );
             writer.Write( this.Filler.ToCharArray() );
             writer.Close();
